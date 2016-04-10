@@ -2,6 +2,7 @@ package cryptoboyz;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 public class Deconstructor {
@@ -30,13 +31,18 @@ public class Deconstructor {
 			poly.plus(fuckJava);
 		}
 		this.polynomial = poly;
-		
+		 
 	}
 	
-	public Share generate(int n) {
+	public Share generate(){
+		return new Share(0,0);
+	}
+	
+	public HashSet<Share> generate(int n) {
 		// TODO use our polynomial to generate a share
 		int y = polynomial.evaluate(n);
-		return new Share(n, y); 
+		//return new Share(n, y); 
+		return new HashSet<Share>();
 	}
 	
 	public static void main(String[] args) {
