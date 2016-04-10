@@ -3,16 +3,20 @@ package cryptoboyz;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
 
 public class Deconstructor {
 	
 	private int p;
 	private Polynomial polynomial;
 	
-	public Deconstructor(String message, int n) {
-		// TODO generate some prime
+	//n - number of shares to be handed out
+	//k - min number shares needed to reconstruct polynomial
+	//	-> polynomial should therefore be degree k-1
+	
+	public Deconstructor(String message, int n, int k) {
+		// TODO generate some prime ps
 		// TODO generate a polynomial for our message
+		// TODO check p > n (size of field should be larger than number of participants)
 		
 		//after generating p, convert message to integer value, this will be the constant term of the polynomial
 		int msgtoint = 4815; //FIXME
@@ -26,9 +30,10 @@ public class Deconstructor {
 		//shuffle to choose random coefficients
 		Collections.shuffle(Arrays.asList(coeff));
 		
-		for(int i=1; i<n; i++){
-			Polynomial fuckJava = new Polynomial(coeff[i-1], i);
-			poly.plus(fuckJava);
+		//polynomial of degree k-1
+		for(int i=1; i<k; i++){
+			Polynomial term = new Polynomial(coeff[i-1], i);
+			poly.plus(term);
 		}
 		this.polynomial = poly;
 		 
@@ -39,15 +44,19 @@ public class Deconstructor {
 	}
 	
 	public HashSet<Share> generate(int n) {
-		// TODO use our polynomial to generate a share
-		int y = polynomial.evaluate(n);
-		//return new Share(n, y); 
-		return new HashSet<Share>();
+		// TODO use our polynomial to generate all shares
+		HashSet<Share> shares = new HashSet<Share>();
+		for(int x=1; x<n; x++){
+			int y = polynomial.evaluate(x);
+			Share s = new Share(x, y);
+			shares.add(s);
+		}
+		return shares;
 	}
 	
 	public static void main(String[] args) {
 		// Parse arguments here, TODO
-		Deconstructor s = new Deconstructor("message", 5);
+		Deconstructor s = new Deconstructor("message", 4, 8);
 		
 		int m = 10;
 		for(int i = 0; i < m; i++) {
