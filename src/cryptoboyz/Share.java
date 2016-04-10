@@ -1,8 +1,13 @@
 package cryptoboyz;
 
 public class Share {
-	public Share() {
-		
+	
+	private int x;
+	private int y;
+	
+	public Share(int x, int y) {
+		this.x = x;
+		this.y = y;
 	}
 	
 	@Override
