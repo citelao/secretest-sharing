@@ -1,15 +1,18 @@
 package cryptoboyz;
 
+import java.util.HashSet;
+
 public class Reconstructor {
 	protected String message;
 	
-	public Reconstructor(Share[] shares) {
-		this(shares, shares.length);
+	public Reconstructor(HashSet<Share> shares) {
+		this(shares, shares.size());
 	}
 	
-	public Reconstructor(Share[] shares, int k) {
+	public Reconstructor(HashSet<Share> shares, int k) {
 		// TODO lagrangian stuff
 		// TODO solve
+		
 	}
 	
 	public String getMessage() {

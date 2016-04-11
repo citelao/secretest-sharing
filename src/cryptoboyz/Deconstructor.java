@@ -14,9 +14,11 @@ public class Deconstructor {
 	//	-> polynomial should therefore be degree k-1
 	
 	public Deconstructor(String message, int n, int k) {
-		// TODO generate some prime ps
+		// TODO generate some prime p
 		// TODO generate a polynomial for our message
 		// TODO check p > n (size of field should be larger than number of participants)
+		
+		
 		
 		//after generating p, convert message to integer value, this will be the constant term of the polynomial
 		int msgtoint = 4815; //FIXME
@@ -47,7 +49,7 @@ public class Deconstructor {
 		// TODO use our polynomial to generate all shares
 		HashSet<Share> shares = new HashSet<Share>();
 		for(int x=1; x<n; x++){
-			int y = polynomial.evaluate(x);
+			int y = polynomial.evaluate(x) % this.p; //each share is (x, f(x) mod p)
 			Share s = new Share(x, y);
 			shares.add(s);
 		}
