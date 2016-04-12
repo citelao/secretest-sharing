@@ -12,8 +12,12 @@ public class Reconstructor {
 	public Reconstructor(HashSet<Share> shares, int k) {
 		// TODO lagrangian stuff
 		// TODO solve
-		
+		for(Share s: shares){
+			
+		}
 	}
+	
+	
 	
 	public String getMessage() {
 		return this.message;
