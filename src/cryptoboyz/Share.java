@@ -13,6 +13,6 @@ public class Share {
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return "(" + this.x + ", " + y + ")";
+		return "(" + this.x + ", " + this.y + ")";
 	}
 }
