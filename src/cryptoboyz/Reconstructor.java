@@ -1,19 +1,29 @@
 package cryptoboyz;
 
+import java.math.BigInteger;
 import java.util.HashSet;
 
 public class Reconstructor {
 	protected String message;
+	private BigInteger p;
 	
-	public Reconstructor(HashSet<Share> shares) {
+	public Reconstructor(HashSet<Share> shares, BigInteger p) {
+		this.p = p;
 		this(shares, shares.size());
 	}
 	
-	public Reconstructor(HashSet<Share> shares, int k) {
+	private Reconstructor(HashSet<Share> shares, int k) {
 		// TODO lagrangian stuff
 		// TODO solve
-		for(Share s: shares){
-			
+		for(Share i: shares){
+			int m = 1;
+			for (Share j: shares){
+				if(!j.equals(i)){
+					int xj = j.getX();
+					int xi = i.getX();
+					int inv = Util.inverse(xj-xi, p);
+				}
+			}
 		}
 	}
 	

@@ -9,15 +9,21 @@ import org.junit.Test;
 
 public class UtilTest {
 	
+	@Test
 	public void eGCDtest(){
 		Random rand = new Random();
-		for(int i=1; i<11; i++){
-			int f = rand.nextInt(101); //random factor between 0 and 100
-			int b = f*i;
-			int[] e = Util.eGCD(i, b);
-			int[] expected = new int[]{b, 0, 1};
-			assertEquals(expected, e);
+		
+		//base case
+		for(int i = 1; i < 4815; i++){
+			int f = rand.nextInt(101) + 1;
+			int N = f*i;
+			int[] e = Util.eGCD(N, i);
+			int[] expected = new int[]{i, 0, 1};
+			for(int j = 0; j < e.length; j++){
+				assertEquals(expected[j], e[j]);
+			}
 		}
+		
 	}
 	
 	@Test
