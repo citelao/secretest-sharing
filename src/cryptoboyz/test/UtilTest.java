@@ -18,7 +18,7 @@ public class UtilTest {
 			BigInteger bi = BigInteger.valueOf(i);
 			BigInteger f;
 			do {
-				f = new BigInteger(10, rand);
+				f = new BigInteger(30, rand);
 			} while (f.compareTo(bi) == -1);
 			BigInteger n = f.multiply(bi);
 			BigInteger[] e = Util.eGCD(n, bi);

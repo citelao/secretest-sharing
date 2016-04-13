@@ -71,9 +71,7 @@ public class Deconstructor {
 		
 		Deconstructor s = new Deconstructor("message", 8);
 
-		int m = 10;
-		for (int i = 0; i < m; i++) {
-			System.out.println(s.generate());
-		}
+		Reconstructor r = new Reconstructor(s.generate(7), s.getPrime());
+		System.out.println(r.getMessage());
 	}
 }
