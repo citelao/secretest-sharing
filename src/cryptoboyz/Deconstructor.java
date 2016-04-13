@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Random;
 
 public class Deconstructor {
 	
@@ -18,24 +19,21 @@ public class Deconstructor {
 		// TODO generate some prime p
 		// TODO generate a polynomial for our message
 		// TODO check p > n (size of field should be larger than number of participants)
-		
-		
+		Random rnd = new Random();
+		p = BigInteger.probablePrime(1000, rnd);
 		
 		//after generating p, convert message to integer value, this will be the constant term of the polynomial
-		int msgtoint = 4815; //FIXME
+		BigInteger msgtoint = BigInteger.valueOf(4815); //FIXME
 		Polynomial poly = new Polynomial(msgtoint, 0);
 		
-		//construct array of possible coefficients (members of Z^*_p)
-		Integer[] coeff = new Integer[p];
-		for(int i=0; i<p; i++){
-			coeff[i] = i;
-		}
-		//shuffle to choose random coefficients
-		Collections.shuffle(Arrays.asList(coeff));
-		
+
 		//polynomial of degree k-1
 		for(int i=1; i<k; i++){
-			Polynomial term = new Polynomial(coeff[i-1], i);
+			BigInteger coeff = new BigInteger(1000, rnd);
+			while(coeff.compareTo(p) > 0){
+				coeff = new BigInteger(1000, rnd);
+			}
+			Polynomial term = new Polynomial(coeff, i);
 			poly.plus(term);
 		}
 		this.polynomial = poly;
@@ -50,7 +48,7 @@ public class Deconstructor {
 		// TODO use our polynomial to generate all shares
 		HashSet<Share> shares = new HashSet<Share>();
 		for(int x=1; x<n; x++){
-			int y = polynomial.evaluate(x) % this.p; //each share is (x, f(x) mod p)
+			BigInteger y = polynomial.evaluate(x).mod(this.p); //each share is (x, f(x) mod p)
 			Share s = new Share(x, y);
 			shares.add(s);
 		}

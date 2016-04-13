@@ -1,11 +1,13 @@
 package cryptoboyz;
 
+import java.math.BigInteger;
+
 public class Share {
 	
 	private int x;
-	private int y;
+	private BigInteger y;
 	
-	public Share(int x, int y) {
+	public Share(int x, BigInteger y) {
 		this.x = x;
 		this.y = y;
 	}
@@ -14,7 +16,7 @@ public class Share {
 		return this.x;
 	}
 	
-	public int getY(){
+	public BigInteger getY(){
 		return this.y;
 	}
 	
@@ -45,4 +47,6 @@ public class Share {
 			return false;
 		return true;
 	}
+
+	
 }
