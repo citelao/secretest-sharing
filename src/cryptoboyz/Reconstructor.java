@@ -33,6 +33,8 @@ public class Reconstructor {
 			}
 			sum.add(f.multiply(m));
 		}
+		byte[] b = sum.toByteArray();
+		message = b.toString();
 	}
 
 	public String getMessage() {

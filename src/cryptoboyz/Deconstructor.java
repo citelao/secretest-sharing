@@ -28,7 +28,8 @@ public class Deconstructor {
 		// after generating p, convert message to integer value, this will be
 		// the constant term of the polynomial
 		// TODO generate a polynomial for our message
-		BigInteger msgtoint = BigInteger.valueOf(4815); // FIXME
+		byte[] b = message.getBytes();
+		BigInteger msgtoint = new BigInteger(b); // FIXME
 		Polynomial poly = new Polynomial(msgtoint, 0);
 
 		// polynomial of degree k-1
