@@ -29,11 +29,11 @@ public class Deconstructor {
 		// the constant term of the polynomial
 		// TODO generate a polynomial for our message
 		byte[] b = message.getBytes();
-		BigInteger msgtoint = new BigInteger(b); // FIXME
+		BigInteger msgtoint = new BigInteger(b);
 		Polynomial poly = new Polynomial(msgtoint, 0);
 
 		// polynomial of degree k-1
-		for (int i = 1; i < k; i++) {
+		for (int i = 1; i < k - 1; i++) {
 			BigInteger coeff = new BigInteger(1000, rnd);
 			while (coeff.compareTo(prime) > 0) {
 				coeff = new BigInteger(1000, rnd);
@@ -45,12 +45,10 @@ public class Deconstructor {
 	}
 
 	public Share generate() {
+		this.sharesGenerated += 1;
 		int x = this.sharesGenerated;
 		BigInteger y = polynomial.evaluate(x).mod(this.prime); // each share is
-																// (x, f(x) mod
-																// p)
-		
-		this.sharesGenerated += 1;
+															   // (x, f(x) mod p)
 		return new Share(x, y);
 	}
 
@@ -69,9 +67,6 @@ public class Deconstructor {
 	public static void main(String[] args) {
 		// Parse arguments here, TODO
 		
-		Deconstructor s = new Deconstructor("message", 8);
-
-		Reconstructor r = new Reconstructor(s.generate(7), s.getPrime());
-		System.out.println(r.getMessage());
+		
 	}
 }

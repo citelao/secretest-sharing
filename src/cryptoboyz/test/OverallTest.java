@@ -15,10 +15,10 @@ public class OverallTest {
 	@Test
 	public void testInverseness() {
 		SecureRandom random = new SecureRandom();
-		String message = new BigInteger(130, random).toString(32);
+		String message = new BigInteger(10, random).toString(32);
 		int k = 10;
 		Deconstructor d = new Deconstructor(message, k);
-		Reconstructor r = new Reconstructor(d.generate(10), d.getPrime());
+		Reconstructor r = new Reconstructor(d.generate(k), d.getPrime());
 		if (!r.getMessage().equals(message)) {
 			fail("Reconstructor does not reconstruct properly.");
 		}
