@@ -1,12 +1,13 @@
 package cryptoboyz;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 
 public class Deconstructor {
 	
-	private int p;
+	private BigInteger p;
 	private Polynomial polynomial;
 	
 	//n - number of shares to be handed out
