@@ -2,6 +2,7 @@ package cryptoboyz;
 
 import java.math.BigInteger;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Random;
 
 public class Deconstructor {
@@ -37,10 +38,9 @@ public class Deconstructor {
 				coeff = new BigInteger(1000, rnd);
 			}
 			Polynomial term = new Polynomial(coeff, i);
-			poly.plus(term);
+			poly = poly.plus(term);
 		}
 		this.polynomial = poly;
-
 	}
 
 	public Share generate() {
@@ -48,8 +48,6 @@ public class Deconstructor {
 		BigInteger y = polynomial.evaluate(x).mod(this.prime); // each share is
 																// (x, f(x) mod
 																// p)
-		
-		System.out.println(polynomial.evaluate(100));
 		
 		this.sharesGenerated += 1;
 		return new Share(x, y);
@@ -69,6 +67,7 @@ public class Deconstructor {
 
 	public static void main(String[] args) {
 		// Parse arguments here, TODO
+				
 		Deconstructor s = new Deconstructor("message", 8);
 
 		int m = 10;
