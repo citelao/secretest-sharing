@@ -14,6 +14,9 @@ public class Polynomial {
 	// a * x^b
 	public Polynomial(BigInteger a, int b) {
 		coef = new BigInteger[b+1];
+		for (int i = 0; i < b; i++) {
+			coef[i] = BigInteger.ZERO;
+		}
 		coef[b] = a;
 		deg = degree();
 	}
