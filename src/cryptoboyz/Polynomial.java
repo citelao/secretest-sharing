@@ -57,4 +57,20 @@ public class Polynomial {
 			
 		return p;
 	}
+	
+
+    // convert to string representation
+    public String toString() {
+        if (deg ==  0) return "" + coef[0];
+        if (deg ==  1) return coef[1] + "x + " + coef[0];
+        String s = coef[deg] + "x^" + deg;
+        for (int i = deg-1; i >= 0; i--) {
+            if      (coef[i] == BigInteger.ZERO) continue;
+            else if (coef[i].compareTo(BigInteger.ZERO) > 0) s = s + " + " + ( coef[i]);
+            if      (i == 1) s = s + "x";
+            else if (i >  1) s = s + "x^" + i;
+        }
+        return s;
+    }
+
 }
