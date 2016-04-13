@@ -23,11 +23,11 @@ public class Util {
 	}
 	
 	//calculate inverse of a mod N
-	public static BigInteger inverse(BigInteger a, BigInteger N){
+	public static BigInteger inverse(BigInteger a, BigInteger N) throws ArithmeticException {
 		BigInteger[] ext = eGCD(a, N);
 		BigInteger d = ext[0];
 		if(d != BigInteger.ONE){
-			throw new ArithmeticException(); //inverse does not exist
+			throw new ArithmeticException("Inverse does not exist");
 		}
 		//return X mod N
 		return (ext[1].mod(N));

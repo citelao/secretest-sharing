@@ -1,16 +1,20 @@
 package cryptoboyz;
 
 import java.math.BigInteger;
-import java.util.HashSet;
+import java.util.Set;
 
 public class Reconstructor {
 	protected String message;
 
-	public Reconstructor(HashSet<Share> shares, BigInteger prime) {
+	public Reconstructor(Set<Share> shares, BigInteger prime) {
 		this(shares, shares.size(), prime);
 	}
 
-	private Reconstructor(HashSet<Share> shares, int k, BigInteger p) {
+	public Reconstructor(Set<Share> shares, int k, BigInteger p) throws IllegalArgumentException {
+		if(k > shares.size()) {
+			throw new IllegalArgumentException("Must provide at least k shares to reconstruct (k:" + k + ", shares:" + shares.size() + ")");
+		}
+		
 		BigInteger sum = BigInteger.ZERO;
 		for (Share i : shares) {
 			BigInteger f = i.getY(); // f(x_i)

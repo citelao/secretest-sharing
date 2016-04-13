@@ -67,7 +67,7 @@ public class Deconstructor {
 
 	public static void main(String[] args) {
 		// Parse arguments here, TODO
-				
+		
 		Deconstructor s = new Deconstructor("message", 8);
 
 		int m = 10;
