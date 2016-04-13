@@ -24,7 +24,7 @@ public class Reconstructor {
 					int xj = j.getX();
 					int xi = i.getX();
 					BigInteger sub = BigInteger.valueOf(xj - xi);
-					BigInteger inv = Util.inverse(sub, p);
+					BigInteger inv = sub.modInverse(p);
 
 					BigInteger num = BigInteger.valueOf(xj);
 					m = m.multiply(num.multiply(inv));
