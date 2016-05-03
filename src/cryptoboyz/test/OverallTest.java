@@ -7,18 +7,20 @@ import java.security.SecureRandom;
 
 import org.junit.Test;
 
-import cryptoboyz.Deconstructor;
-import cryptoboyz.Reconstructor;
+import cryptoboyz.secret_sharing.Deconstructor;
+import cryptoboyz.secret_sharing.Reconstructor;
 
 public class OverallTest {
 
 	@Test
 	public void testInverseness() {
 		SecureRandom random = new SecureRandom();
-		String message = new BigInteger(10, random).toString(32);
-		int k = 10;
+		String message = new BigInteger(130, random).toString(32);
+		int k = 2;
 		Deconstructor d = new Deconstructor(message, k);
-		Reconstructor r = new Reconstructor(d.generate(k), d.getPrime());
+		Reconstructor r = new Reconstructor(d.generate(10), d.getPrime());
+		System.out.println(r.getMessage());
+		System.out.println(message);
 		if (!r.getMessage().equals(message)) {
 			fail("Reconstructor does not reconstruct properly.");
 		}

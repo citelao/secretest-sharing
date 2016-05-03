@@ -1,4 +1,4 @@
-package cryptoboyz;
+package cryptoboyz.secret_sharing;
 
 import java.math.BigInteger;
 import java.util.Set;
