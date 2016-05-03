@@ -1,8 +1,7 @@
-package cryptoboyz;
+package cryptoboyz.secret_sharing;
 
 import java.math.BigInteger;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Random;
 
 public class Deconstructor {
