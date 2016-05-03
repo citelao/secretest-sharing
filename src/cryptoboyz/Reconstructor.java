@@ -45,7 +45,7 @@ public class Reconstructor {
 		// TODO actually give our reconstructor a list of shares.
 		Deconstructor s = new Deconstructor("hello ben you cringus", 8);
 		
-		Reconstructor r = new Reconstructor(s.generate(8), s.getPrime());
+		Reconstructor r = new Reconstructor(s.generate(20), s.getPrime());
 		System.out.println(r.getMessage());
 	}
 

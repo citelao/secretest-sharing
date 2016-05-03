@@ -25,9 +25,8 @@ public class Deconstructor {
 		Random rnd = new Random();
 		prime = BigInteger.probablePrime(1000, rnd);
 		
-		// after generating p, convert message to integer value, this will be
-		// the constant term of the polynomial
-		// TODO generate a polynomial for our message
+		// after generating p, convert message to integer value
+		// 	this will be the constant term of the polynomial
 		byte[] b = message.getBytes();
 		BigInteger msgtoint = new BigInteger(b);
 		Polynomial poly = new Polynomial(msgtoint, 0);
@@ -57,16 +56,11 @@ public class Deconstructor {
 		for (int x = 1; x < n; x++) {
 			shares.add(this.generate());
 		}
+		
 		return shares;
 	}
 
 	public BigInteger getPrime() {
 		return this.prime;
-	}
-
-	public static void main(String[] args) {
-		// Parse arguments here, TODO
-		
-		
 	}
 }
