@@ -20,21 +20,21 @@ public class Reconstructor {
 			BigInteger f = i.getY(); // f(x_i)
 			BigInteger m = BigInteger.ONE;
 			for (Share j : shares) {
+				
 				if (!j.equals(i)) {
 					int xj = j.getX();
 					int xi = i.getX();
 					BigInteger sub = BigInteger.valueOf(xj - xi);
 					BigInteger inv = sub.modInverse(p);
-
 					BigInteger num = BigInteger.valueOf(xj);
 					m = m.multiply(num.multiply(inv));
-
 				}
 			}
-			sum.add(f.multiply(m));
+			sum = sum.add(f.multiply(m)).mod(p);
+			
 		}
 		byte[] b = sum.toByteArray();
-		message = b.toString();
+		message = new String(b);
 	}
 
 	public String getMessage() {
@@ -43,7 +43,9 @@ public class Reconstructor {
 
 	public static void main(String[] args) {
 		// TODO actually give our reconstructor a list of shares.
-		Reconstructor r = new Reconstructor(null, null);
+		Deconstructor s = new Deconstructor("hello ben you cringus", 8);
+		
+		Reconstructor r = new Reconstructor(s.generate(8), s.getPrime());
 		System.out.println(r.getMessage());
 	}
 
