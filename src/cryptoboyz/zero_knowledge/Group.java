@@ -5,6 +5,10 @@ import java.util.Random;
 
 public class Group {
 	
+	/**
+	 * generates finite group of order q, where q is PROBABLY (as defined by Java?) prime
+	 */
+	
 	private final BigInteger order;
 	
 	public Group(){
@@ -12,10 +16,16 @@ public class Group {
 		this.order = BigInteger.probablePrime(1000, rnd);
 	}
 	
+	public Group(BigInteger order){
+		this.order = order;
+	}
+	
 	public GroupNumber generateMember(){
 		Random rnd = new Random();
 		BigInteger number = new BigInteger(1000, rnd);
-		while (number.compareTo(order) > 0) {
+		//a member of the group cannot be greater than or equal to the order of the group
+		//alternatively we could generate a random BigInteger and mod it by order
+		while (number.compareTo(order) >= 0) {
 			number = new BigInteger(1000, rnd);
 		}
 		return new GroupNumber(number, this);

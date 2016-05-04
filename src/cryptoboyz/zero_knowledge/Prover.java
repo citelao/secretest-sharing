@@ -1,11 +1,12 @@
 package cryptoboyz.zero_knowledge;
 
+import cryptoboyz.commitment.CommitMessage;
 import cryptoboyz.commitment.TrustException;
 
 public class Prover {
 	
 	/**
-	 * k = random groupnumber for commitment scheme
+	 * k = random groupnumber for commitment scheme (based off order of commitment group, t)
 	 * g, h = generators
 	 * w = witness
 	 * r = random groupnumber to encrypt initial message
@@ -14,10 +15,10 @@ public class Prover {
 	private GroupNumber k, g, h, w, r, e;
 	private Group group;
 	private Stage currStage;
+	private CommitMessage cm;
 	
 	public Prover(GroupNumber g, GroupNumber h, GroupNumber x, Group group) {
 		// So we want to prove we know X.
-		this.k = group.generateMember();
 		this.g = g;
 		this.h = h;
 		this.w = x;
@@ -25,26 +26,28 @@ public class Prover {
 		this.currStage = Stage.COMMIT;
 	}
 	
-	public GroupNumber sendAlpha() throws TrustException{
+	public GroupNumber sendAlpha(Group t) throws TrustException{
 		if(currStage != Stage.COMMIT){
 			throw new TrustException("Invalid stage");
 		}
+		this.k = t.generateMember();
 		GroupNumber alpha = g.exp(k);
 		currStage = currStage.next();
 		return alpha;
 	}
 	
-	public GroupNumber sendMessage() throws TrustException{
+	public GroupNumber getMessage(CommitMessage cm) throws TrustException{
 		if(currStage != Stage.MSG){
 			throw new TrustException("Invalid stage");
 		}
+		this.cm = cm;
 		currStage = currStage.next();
 		this.r = group.generateMember();
 		GroupNumber m = (g.multiply(h)).exp(r); //m = (gh)^x
 		return m;
 	}
 	
-	public GroupNumber sendResponse() throws TrustException{
+	public GroupNumber getResponse(GroupNumber challenge, GroupNumber key) throws TrustException{
 		if(currStage != Stage.RESPONSE){
 			throw new TrustException("Invalid stage");
 		}
