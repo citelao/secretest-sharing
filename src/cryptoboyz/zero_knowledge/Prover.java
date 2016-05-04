@@ -33,6 +33,7 @@ public class Prover {
 		this.k = t.generateMember();	
 		this.alpha = g.exp(k); 
 		currStage = currStage.next();
+		System.out.println("alpha = " + alpha);
 		return alpha;
 	}
 	
@@ -44,6 +45,7 @@ public class Prover {
 		currStage = currStage.next();
 		this.r = group.generateMember();
 		GroupNumber m = (g.multiply(h)).exp(r); //m = (gh)^x
+		System.out.println("m = " + m);
 		return m;
 	}
 	
@@ -53,13 +55,12 @@ public class Prover {
 			throw new TrustException("Invalid stage");
 		}
 		
-		//check that cm = (g^key)(alpha^challenge)
-		if(!cm.equals(g.exp(key).multiply(alpha.exp(challenge)))){
-			throw new TrustException("Invalid stage");
-		}
-		
+		//don't need the value
+		cm.decommit(challenge, key);
+	
 		currStage = currStage.next();
 		GroupNumber z = r.add(challenge.multiply(w)); //z = r + ew
+		System.out.println("z = " + z);
 		return z;
 	}
 	

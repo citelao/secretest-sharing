@@ -68,4 +68,11 @@ public class CommitMessage {
 		return info;
 	}
 	
+	public String toString() {
+		return "<CommitMessage>\n" +
+				"\tg:      " + this.g + "\n" +
+				"\talpha:  " + this.alpha + "\n" +
+				"\tcommit: " + this.committed;
+	}
+	
 }

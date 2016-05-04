@@ -40,4 +40,10 @@ public class GroupNumber {
 		return this.value.equals(e.value);
 	}
 	
+	
+	@Override
+	public String toString(){
+		return this.value.toString();
+	}
+	
 }
