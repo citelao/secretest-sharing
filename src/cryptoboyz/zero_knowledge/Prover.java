@@ -26,7 +26,7 @@ public class Prover {
 		this.currStage = Stage.COMMIT;
 	}
 	
-	public GroupNumber sendAlpha(Group t) throws TrustException{
+	public GroupNumber getAlpha(Group t) throws TrustException{
 		if(currStage != Stage.COMMIT){
 			throw new TrustException("Invalid stage");
 		}
