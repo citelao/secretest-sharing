@@ -1,7 +1,7 @@
 package cryptoboyz.zero_knowledge;
 
 public enum Stage {
-	COMMIT, MSG, DECOMMIT, RESPONSE, VERIFY;
+	COMMIT, MSG, RESPONSE, VERIFY;
 	 private static Stage[] vals = values();
 	    public Stage next()
 	    {
