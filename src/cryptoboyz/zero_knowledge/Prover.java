@@ -5,7 +5,7 @@ import cryptoboyz.commitment.TrustException;
 public class Prover {
 	
 	/**
-	 * k = random groupnumber for commitment scheme
+	 * k = random groupnumber for commitment scheme (based off order of commitment group, t)
 	 * g, h = generators
 	 * w = witness
 	 * r = random groupnumber to encrypt initial message
@@ -17,7 +17,6 @@ public class Prover {
 	
 	public Prover(GroupNumber g, GroupNumber h, GroupNumber x, Group group) {
 		// So we want to prove we know X.
-		this.k = group.generateMember();
 		this.g = g;
 		this.h = h;
 		this.w = x;
@@ -25,10 +24,11 @@ public class Prover {
 		this.currStage = Stage.COMMIT;
 	}
 	
-	public GroupNumber sendAlpha() throws TrustException{
+	public GroupNumber sendAlpha(Group t) throws TrustException{
 		if(currStage != Stage.COMMIT){
 			throw new TrustException("Invalid stage");
 		}
+		this.k = t.generateMember();
 		GroupNumber alpha = g.exp(k);
 		currStage = currStage.next();
 		return alpha;

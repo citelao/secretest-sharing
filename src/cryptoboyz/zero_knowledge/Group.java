@@ -16,6 +16,10 @@ public class Group {
 		this.order = BigInteger.probablePrime(1000, rnd);
 	}
 	
+	public Group(BigInteger order){
+		this.order = order;
+	}
+	
 	public GroupNumber generateMember(){
 		Random rnd = new Random();
 		BigInteger number = new BigInteger(1000, rnd);
