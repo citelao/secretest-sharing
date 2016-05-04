@@ -18,7 +18,7 @@ public class Group {
 		while (number.compareTo(order) > 0) {
 			number = new BigInteger(1000, rnd);
 		}
-		return new GroupNumber(number, order);
+		return new GroupNumber(number, this);
 	}
 	
 	public BigInteger getOrder(){
