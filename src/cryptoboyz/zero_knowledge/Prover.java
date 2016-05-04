@@ -48,7 +48,8 @@ public class Prover {
 		currStage = currStage.next();
 		this.r = group.generateMember();
 		GroupNumber m = (g.multiply(h)).exp(r); //m = (gh)^r
-		System.out.println("m = " + m);
+		System.out.println("(r = " + r + ")");
+		System.out.println("m = " + m + " = (gh)^r");
 		return m;
 	}
 	
@@ -64,7 +65,7 @@ public class Prover {
 		currStage = currStage.next();
 		challenge.upConvertOrder(group);
 		GroupNumber z = r.add(challenge.multiply(w)); //z = r + ew
-		System.out.println("z = " + z);
+		System.out.println("z = " + z + " = r + challenge * x");
 		return z;
 	}
 	

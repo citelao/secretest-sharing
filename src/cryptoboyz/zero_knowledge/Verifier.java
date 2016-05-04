@@ -1,6 +1,8 @@
 package cryptoboyz.zero_knowledge;
 
 
+import java.math.BigInteger;
+
 import cryptoboyz.commitment.CommitMessage;
 import cryptoboyz.commitment.TrustException;
 
@@ -30,7 +32,8 @@ public class Verifier {
 		Group commitmentGroup = new Group(t);
 		
 		GroupNumber alpha = p.getAlpha(commitmentGroup);
-		GroupNumber challenge = commitmentGroup.generateMember();	
+		GroupNumber challenge = commitmentGroup.generateMember();
+		challenge = new GroupNumber(BigInteger.ONE, commitmentGroup);
 		GroupNumber key = commitmentGroup.generateMember();
 		GroupNumber generator = commitmentGroup.generateGenerator();
 		CommitMessage cm = CommitMessage.Generate(generator, alpha, key, challenge);
@@ -63,6 +66,9 @@ public class Verifier {
 		
 		GroupNumber ghz = (this.g.multiply(this.h)).exp(response);
 		GroupNumber gxhxe = (this.gx.multiply(this.hx)).exp(challenge);
+		System.out.println("\t(gh)^z = " + ghz);
+		System.out.println("\t(g^x*h^x)^e = " + gxhxe);
+		System.out.println("\tm*(g^x*h^x)^e = " + message.multiply(gxhxe));
 		System.out.println("\t\tconvinced: " + ghz.equals(message.multiply(gxhxe)));
 		return ghz.equals(message.multiply(gxhxe));
 	}
