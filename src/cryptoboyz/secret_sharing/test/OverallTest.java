@@ -1,4 +1,4 @@
-package cryptoboyz.test;
+package cryptoboyz.secret_sharing.test;
 
 import static org.junit.Assert.*;
 

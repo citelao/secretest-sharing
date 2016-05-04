@@ -26,12 +26,12 @@ public class CommitMessage {
 	 * 
 	 * @param g the magical generator
 	 * @param alpha your untrusting "friend"'s random number
+	 * @param key your secret, randomly generated key
 	 * @param info your hidden information
 	 * @return a CommitMessage that you can share with anybody!
 	 */
-	public static CommitMessage Generate(GroupNumber g, GroupNumber alpha, GroupNumber info) {
-		GroupNumber u = g.getGroup().generateMember();
-		GroupNumber commitment = alpha.exp(info).multiply(g.exp(u));
+	public static CommitMessage Generate(GroupNumber g, GroupNumber alpha, GroupNumber key, GroupNumber info) {
+		GroupNumber commitment = alpha.exp(info).multiply(g.exp(key));
 		return new CommitMessage(g, alpha, commitment);
 	}
 	
@@ -56,12 +56,12 @@ public class CommitMessage {
 	 * Throws a TrustException if what you de-committed to was not correct.
 	 * 
 	 * @param info what Alice says she committed too
-	 * @param c what Alice says she used to generate her commitment
+	 * @param key what Alice says she used to generate her commitment
 	 * @return what Alice committed too, unless she was lying
 	 * @throws TrustException
 	 */
-	public GroupNumber decommit(GroupNumber info, GroupNumber c) throws TrustException {
-		if(!this.alpha.exp(info).multiply(this.g.exp(c)).equals(committed)) {
+	public GroupNumber decommit(GroupNumber info, GroupNumber key) throws TrustException {
+		if(!this.alpha.exp(info).multiply(this.g.exp(key)).equals(committed)) {
 			throw new TrustException("Committed value does not match sent information " + info);
 		}
 		

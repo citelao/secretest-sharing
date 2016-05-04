@@ -24,4 +24,8 @@ public class Group {
 	public BigInteger getOrder(){
 		return this.order;
 	}
+
+	public GroupNumber generateGenerator() {
+		return this.generateMember();
+	}
 }
