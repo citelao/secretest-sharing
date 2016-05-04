@@ -14,14 +14,15 @@ public class Group {
 	
 	public Group(){
 		Random rnd = new Random();
-		this.bits = 6; // debug :)
+		this.bits = 50; // debug :)
 		// this.bits = 1000;
 		this.order = BigInteger.probablePrime(this.bits, rnd);
 	}
 	
 	public Group(int bits) {
+		Random rnd = new Random();
 		this.bits = bits;
-		this.order = BigInteger.valueOf(2L).pow(bits);
+		this.order = BigInteger.probablePrime(this.bits, rnd);
 	}
 	
 	public GroupNumber generateMember(){

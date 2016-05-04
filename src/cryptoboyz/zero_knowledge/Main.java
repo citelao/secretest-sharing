@@ -16,7 +16,7 @@ public class Main {
 		Prover p = new Prover(g, h, x, Z);
 		Verifier v = new Verifier(g, h, g.exp(x), h.exp(x));
 		try {
-			v.verify(p, 4);
+			v.verify(p, 10);
 		} catch (TrustException e) {
 			System.err.println("You cheating little rascal");
 //			System.out.println(e.getMessage());
