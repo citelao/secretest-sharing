@@ -12,7 +12,7 @@ public class Main {
 		
 		GroupNumber x = Z.generateMember();
 		
-		Prover p = new Prover(g, h, x);
+		Prover p = new Prover(g, h, x, Z);
 		Verifier v = new Verifier(g, h);
 		
 	}
