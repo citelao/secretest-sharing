@@ -1,6 +1,5 @@
 package cryptoboyz.zero_knowledge;
 
-import java.math.BigInteger;
 
 import cryptoboyz.commitment.CommitMessage;
 import cryptoboyz.commitment.TrustException;
@@ -29,6 +28,7 @@ public class Verifier {
 	public boolean verify(Prover p, int t) throws TrustException {
 		// Step 1: choose a choose bit & send it, encrypted-like
 		Group commitmentGroup = new Group(t);
+		
 		GroupNumber alpha = p.getAlpha(commitmentGroup);
 		GroupNumber challenge = commitmentGroup.generateMember();	
 		GroupNumber key = commitmentGroup.generateMember();
@@ -40,7 +40,7 @@ public class Verifier {
 		// Step 2: receive message of g^x h^x
 		
 		GroupNumber message = p.getMessage(cm);
-		System.out.println("(challenge, key)\n"
+		System.out.println("(challenge, key) = \n"
 					+ "\t challenge: " + challenge + "\n"
 					+ "\t key: " + key);
 		
@@ -56,9 +56,14 @@ public class Verifier {
 		// g^x = this.gx
 		// h^x = this.hx
 		// e = challenge
+		
+		//GroupNumber messageUpconverted = new GroupNumber(message.getValue(), ghz.getGroup());
+		response.upConvertOrder(g.getGroup());
+		challenge.upConvertOrder(g.getGroup());
+		
 		GroupNumber ghz = (this.g.multiply(this.h)).exp(response);
 		GroupNumber gxhxe = (this.gx.multiply(this.hx)).exp(challenge);
-		System.out.println("I am convinced: " + ghz.equals(message.multiply(gxhxe)));
+		System.out.println("Verifier is convinced: " + ghz.equals(message.multiply(gxhxe)));
 		return ghz.equals(message.multiply(gxhxe));
 	}
 }

@@ -14,7 +14,7 @@ public class Group {
 	
 	public Group(){
 		Random rnd = new Random();
-		this.bits = 3; // debug :)
+		this.bits = 6; // debug :)
 		// this.bits = 1000;
 		this.order = BigInteger.probablePrime(this.bits, rnd);
 	}
