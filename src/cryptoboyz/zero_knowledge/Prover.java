@@ -12,7 +12,7 @@ public class Prover {
 	 * r = random groupnumber to encrypt initial message
 	 * e = challenge string from verifier
 	 */
-	private GroupNumber k, g, h, w, r, e;
+	private GroupNumber k, g, h, w, r, alpha;
 	private Group group;
 	private Stage currStage;
 	private CommitMessage cm;
@@ -26,12 +26,12 @@ public class Prover {
 		this.currStage = Stage.COMMIT;
 	}
 	
-	public GroupNumber sendAlpha(Group t) throws TrustException{
+	public GroupNumber getAlpha(Group t) throws TrustException{
 		if(currStage != Stage.COMMIT){
 			throw new TrustException("Invalid stage");
 		}
-		this.k = t.generateMember();
-		GroupNumber alpha = g.exp(k);
+		this.k = t.generateMember();	
+		this.alpha = g.exp(k); 
 		currStage = currStage.next();
 		return alpha;
 	}
@@ -48,11 +48,18 @@ public class Prover {
 	}
 	
 	public GroupNumber getResponse(GroupNumber challenge, GroupNumber key) throws TrustException{
+		
 		if(currStage != Stage.RESPONSE){
 			throw new TrustException("Invalid stage");
 		}
+		
+		//check that cm = (g^key)(alpha^challenge)
+		if(!cm.equals(g.exp(key).multiply(alpha.exp(challenge)))){
+			throw new TrustException("Invalid stage");
+		}
+		
 		currStage = currStage.next();
-		GroupNumber z = r.add(e.multiply(w)); //z = r + ew
+		GroupNumber z = r.add(challenge.multiply(w)); //z = r + ew
 		return z;
 	}
 	
