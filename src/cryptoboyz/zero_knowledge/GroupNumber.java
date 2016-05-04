@@ -27,11 +27,16 @@ public class GroupNumber {
 	
 	public GroupNumber multiply(GroupNumber n){
 		BigInteger newval = this.value.multiply(n.value);
+		newval = newval.mod(this.group.getOrder());
 		return new GroupNumber(newval, this.group);
 	}
 	
 	public Group getGroup(){
 		return this.group;
+	}
+	
+	public boolean equals(GroupNumber e){
+		return this.value.equals(e.value);
 	}
 	
 }
