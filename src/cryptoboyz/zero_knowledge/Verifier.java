@@ -10,6 +10,8 @@ public class Verifier {
 		// TODO
 		// Step 1: choose a choose bit & send it, encrypted-like
 		
+		
+		
 		// Step 2: receive message of g^x h^x
 		
 		// Step 3: send over proof of challenge bit

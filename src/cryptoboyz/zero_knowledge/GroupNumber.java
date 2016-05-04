@@ -22,6 +22,7 @@ public class GroupNumber {
 	
 	public GroupNumber add(GroupNumber n){
 		BigInteger newval = this.value.add(n.value);
+		newval = newval.mod(this.group.getOrder());
 		return new GroupNumber(newval, this.group);
 	}
 	

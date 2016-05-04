@@ -2,7 +2,7 @@ package cryptoboyz.zero_knowledge;
 
 public class Prover {
 	
-	private GroupNumber g, h, x, k;
+	private GroupNumber g, h, x, e, r, k;
 	private Group group;
 	private Stage currStage;
 	
@@ -30,7 +30,17 @@ public class Prover {
 			throw new Exception("Invalid stage");
 		}
 		currStage = currStage.next();
-		return g.exp(x);
+		GroupNumber r = group.generateMember();
+		return g.exp(r);
+	}
+	
+	public GroupNumber sendResponse() throws Exception{
+		if(currStage != Stage.RESPONSE){
+			throw new Exception("Invalid stage");
+		}
+		currStage = currStage.next();
+		GroupNumber z = r.add(e.multiply(x));
+		return z;
 	}
 	
 	
