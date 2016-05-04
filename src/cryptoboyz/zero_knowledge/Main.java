@@ -20,6 +20,7 @@ public class Main {
 		System.out.println("g: " + g + "\t(g^x: " + g.exp(x) + ")");
 		System.out.println("h: " + h + "\t(h^x: " + h.exp(x) + ")");
 		System.out.println("\t(x:  " + x + ")");
+		System.out.println("\t(gh^x: " + g.multiply(h).exp(x) + ")");
 		System.out.println("|group|: " + group.getOrder() + "");
 		
 		System.out.println("\nThe protocol:");

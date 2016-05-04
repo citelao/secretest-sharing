@@ -61,6 +61,7 @@ public class Prover {
 		
 		//don't need the value
 		System.out.println("(c = " + cm.decommit(challenge, key) + ")");
+//		System.out.println();
 	
 		currStage = currStage.next();
 		challenge.upConvertOrder(group);
