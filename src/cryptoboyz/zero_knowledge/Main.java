@@ -1,25 +1,35 @@
 package cryptoboyz.zero_knowledge;
 
+import java.math.BigInteger;
+
 import cryptoboyz.commitment.TrustException;
 
 public class Main {
 	
 	public static void main(String[] args){
-		Group Z = new Group();
-		GroupNumber g = Z.generateMember();
-		GroupNumber h = Z.generateMember();
+		Group group = new Group();
+		GroupNumber g = group.generateMember();
+		GroupNumber h = group.generateMember();
 		while(h.equals(g)){
-			h = Z.generateMember();
+			h = group.generateMember();
 		}
 		
-		GroupNumber x = Z.generateMember();
-		Prover p = new Prover(g, h, x, Z);
+		GroupNumber x = group.generateNonTrivialMember();
+		
+		System.out.println("The problem:");
+		System.out.println("g: " + g + "\t(g^x: " + g.exp(x) + ")");
+		System.out.println("h: " + h + "\t(h^x: " + h.exp(x) + ")");
+		System.out.println("\t(x:  " + x + ")");
+		System.out.println("|group|: " + group.getOrder() + "");
+		
+		System.out.println("\nThe protocol:");
+		
+		Prover p = new Prover(g, h, x, group);
 		Verifier v = new Verifier(g, h, g.exp(x), h.exp(x));
 		try {
-			v.verify(p, 4);
+			v.verify(p, 6);
 		} catch (TrustException e) {
 			System.err.println("You cheating little rascal");
-//			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 	}

@@ -14,7 +14,7 @@ public class Group {
 	
 	public Group(){
 		Random rnd = new Random();
-		this.bits = 6; // debug :)
+		this.bits = 8; // debug :)
 		// this.bits = 1000;
 		this.order = BigInteger.probablePrime(this.bits, rnd);
 	}
@@ -35,11 +35,21 @@ public class Group {
 		return new GroupNumber(number, this);
 	}
 	
-	public BigInteger getOrder(){
-		return this.order;
+	public GroupNumber generateNonTrivialMember() {
+		GroupNumber x;
+		do {
+			x = this.generateMember();
+		} while (x.equals(new GroupNumber(BigInteger.ZERO, this)) ||
+				x.equals(new GroupNumber(BigInteger.ONE, this)));
+		
+		return x;
 	}
 
 	public GroupNumber generateGenerator() {
-		return this.generateMember();
+		return this.generateNonTrivialMember();
+	}
+	
+	public BigInteger getOrder(){
+		return this.order;
 	}
 }

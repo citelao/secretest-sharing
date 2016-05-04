@@ -35,17 +35,17 @@ public class Verifier {
 		GroupNumber generator = commitmentGroup.generateGenerator();
 		CommitMessage cm = CommitMessage.Generate(generator, alpha, key, challenge);
 		
-		System.out.println("c = " + cm);
+		System.out.println("\t\t(c = " + challenge + ")");
+		System.out.println("\tc = " + cm);
 		
 		// Step 2: receive message of g^x h^x
-		
 		GroupNumber message = p.getMessage(cm);
-		System.out.println("(challenge, key) = \n"
-					+ "\t challenge: " + challenge + "\n"
-					+ "\t key: " + key);
 		
 		// Step 3: send over proof of challenge bit
 		// Step 4: receive z
+		System.out.println("\t(challenge, key) = \n"
+				+ "\t\t challenge: " + challenge + "\n"
+				+ "\t\t key: " + key);
 		GroupNumber response = p.getResponse(challenge, key);
 		
 		// Step 5: confirm!
@@ -63,7 +63,7 @@ public class Verifier {
 		
 		GroupNumber ghz = (this.g.multiply(this.h)).exp(response);
 		GroupNumber gxhxe = (this.gx.multiply(this.hx)).exp(challenge);
-		System.out.println("Verifier is convinced: " + ghz.equals(message.multiply(gxhxe)));
+		System.out.println("\t\tconvinced: " + ghz.equals(message.multiply(gxhxe)));
 		return ghz.equals(message.multiply(gxhxe));
 	}
 }

@@ -22,6 +22,7 @@ public class GroupNumber {
 		if(!this.group.getOrder().equals(k.group.getOrder())){
 			System.err.println("Operation being done on numbers from different groups!");
 		}
+		
 		return new GroupNumber(this.value.modPow(k.value, this.group.getOrder()), this.group);
 	}
 	

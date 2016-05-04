@@ -2,6 +2,8 @@ package cryptoboyz.commitment.test;
 
 import static org.junit.Assert.*;
 
+import java.math.BigInteger;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -60,6 +62,38 @@ public class CommitMessageTest {
 		GroupNumber infoPrime = group.generateMember();
 		thrown.expect(TrustException.class);
 		cm.decommit(infoPrime, key);
+	}
+	
+	@Test
+	public void whatAboutZeroInfo() {
+		Group group = new Group();
+		GroupNumber g = group.generateGenerator();
+		GroupNumber alpha = group.generateMember();
+		GroupNumber key = group.generateMember();
+		GroupNumber info = new GroupNumber(BigInteger.ZERO, group);
+		CommitMessage cm = CommitMessage.Generate(g, alpha, key, info);
+		
+		try {
+			cm.decommit(info, key);
+		} catch (TrustException e) {
+			fail("Even zero (info) should work!");
+		}
+	}
+	
+	@Test
+	public void whatAboutZeroAlpha() {
+		Group group = new Group();
+		GroupNumber g = group.generateGenerator();
+		GroupNumber alpha = new GroupNumber(BigInteger.ZERO, group);
+		GroupNumber key = group.generateMember();
+		GroupNumber info = group.generateMember();
+		CommitMessage cm = CommitMessage.Generate(g, alpha, key, info);
+		
+		try {
+			cm.decommit(info, key);
+		} catch (TrustException e) {
+			fail("Even zero should work!");
+		}
 	}
 
 }

@@ -1,5 +1,7 @@
 package cryptoboyz.zero_knowledge;
 
+import java.math.BigInteger;
+
 import cryptoboyz.commitment.CommitMessage;
 import cryptoboyz.commitment.TrustException;
 
@@ -30,10 +32,12 @@ public class Prover {
 		if(currStage != Stage.COMMIT){
 			throw new TrustException("Invalid stage");
 		}
-		this.k = t.generateMember();
+		this.k = t.generateNonTrivialMember();
 		this.g2 = t.generateGenerator();
-		this.alpha = g2.exp(k); 
+		this.alpha = g2.exp(k);
 		currStage = currStage.next();
+		System.out.println(g2);
+		System.out.println(k);
 		System.out.println("alpha = " + alpha);
 		return alpha;
 	}
@@ -45,7 +49,7 @@ public class Prover {
 		this.cm = cm;
 		currStage = currStage.next();
 		this.r = group.generateMember();
-		GroupNumber m = (g.multiply(h)).exp(r); //m = (gh)^x
+		GroupNumber m = (g.multiply(h)).exp(r); //m = (gh)^r
 		System.out.println("m = " + m);
 		return m;
 	}
@@ -57,7 +61,7 @@ public class Prover {
 		}
 		
 		//don't need the value
-		cm.decommit(challenge, key);
+		System.out.println("(c = " + cm.decommit(challenge, key) + ")");
 	
 		currStage = currStage.next();
 		challenge.upConvertOrder(group);
