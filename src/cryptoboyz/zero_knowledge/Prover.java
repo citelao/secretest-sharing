@@ -36,8 +36,6 @@ public class Prover {
 		this.g2 = t.generateGenerator();
 		this.alpha = g2.exp(k);
 		currStage = currStage.next();
-		System.out.println(g2);
-		System.out.println(k);
 		System.out.println("alpha = " + alpha);
 		return alpha;
 	}

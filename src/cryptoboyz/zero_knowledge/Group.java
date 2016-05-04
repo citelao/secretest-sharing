@@ -20,8 +20,9 @@ public class Group {
 	}
 	
 	public Group(int bits) {
+		Random rnd = new Random();
 		this.bits = bits;
-		this.order = BigInteger.valueOf(2L).pow(bits);
+		this.order = BigInteger.probablePrime(this.bits, rnd);
 	}
 	
 	public GroupNumber generateMember(){
