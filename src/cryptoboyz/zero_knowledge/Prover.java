@@ -7,6 +7,8 @@ import cryptoboyz.commitment.TrustException;
 
 public class Prover {
 	
+	private static boolean DEBUG = false;
+	
 	/**
 	 * k = random groupnumber for commitment scheme (based off order of commitment group, t)
 	 * g, h = generators
@@ -36,7 +38,9 @@ public class Prover {
 		this.g2 = t.generateGenerator();
 		this.alpha = g2.exp(k);
 		currStage = currStage.next();
-		System.out.println("alpha = " + alpha);
+		if(DEBUG) {
+			System.out.println("alpha = " + alpha);
+		}
 		return alpha;
 	}
 	
@@ -48,8 +52,10 @@ public class Prover {
 		currStage = currStage.next();
 		this.r = group.generateMember();
 		GroupNumber m = (g.multiply(h)).exp(r); //m = (gh)^r
-		System.out.println("(r = " + r + ")");
-		System.out.println("m = " + m + " = (gh)^r");
+		if(DEBUG) {
+			System.out.println("(r = " + r + ")");
+			System.out.println("m = " + m + " = (gh)^r");
+		}
 		return m;
 	}
 	
@@ -60,13 +66,18 @@ public class Prover {
 		}
 		
 		//don't need the value
-		System.out.println("(c = " + cm.decommit(challenge, key) + ")");
-//		System.out.println();
+		if(DEBUG) {
+			System.out.println("(c = " + cm.decommit(challenge, key) + ")");
+		} else {
+			cm.decommit(challenge, key);
+		}
 	
 		currStage = currStage.next();
 		challenge.upConvertOrder(group);
 		GroupNumber z = r.add(challenge.multiplyNoMod(w)); //z = r + ew
-		System.out.println("z = " + z + " = r + challenge * x");
+		if(DEBUG) {
+			System.out.println("z = " + z + " = r + challenge * x");
+		}
 		return z;
 	}
 	
