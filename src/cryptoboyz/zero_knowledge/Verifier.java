@@ -64,6 +64,10 @@ public class Verifier {
 		response.upConvertOrder(g.getGroup());
 		challenge.upConvertOrder(g.getGroup());
 		
+		GroupNumber modMinusOne = new GroupNumber(g.getGroup().getOrder().subtract(BigInteger.ONE), g.getGroup());
+		
+		response = response.mod(modMinusOne);
+		
 		GroupNumber ghz = (this.g.multiply(this.h)).exp(response);
 		GroupNumber gxhxe = (this.gx.multiply(this.hx)).exp(challenge);
 		System.out.println("\t(gh)^z = " + ghz);

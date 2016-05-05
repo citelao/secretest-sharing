@@ -65,7 +65,7 @@ public class Prover {
 	
 		currStage = currStage.next();
 		challenge.upConvertOrder(group);
-		GroupNumber z = r.add(challenge.multiply(w)); //z = r + ew
+		GroupNumber z = r.add(challenge.multiplyNoMod(w)); //z = r + ew
 		System.out.println("z = " + z + " = r + challenge * x");
 		return z;
 	}

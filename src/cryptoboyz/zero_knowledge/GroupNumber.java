@@ -26,7 +26,7 @@ public class GroupNumber {
 		if(!this.group.getOrder().equals(e.group.getOrder())){
 			System.err.println("Operation being done on numbers from different groups!");
 		}
-		
+		e = e.mod(new GroupNumber(this.getGroup().getOrder(), this.getGroup()));
 		return new GroupNumber(this.value.modPow(e.value, this.group.getOrder()), this.group);
 	}
 	
@@ -35,7 +35,7 @@ public class GroupNumber {
 			System.err.println("Operation being done on numbers from different groups!");
 		}
 		BigInteger newval = this.value.add(n.value);
-		newval = newval.mod(this.group.getOrder());
+		//newval = newval.mod(this.group.getOrder());
 		return new GroupNumber(newval, this.group);
 	}
 	
@@ -45,6 +45,14 @@ public class GroupNumber {
 		}
 		BigInteger newval = this.value.multiply(n.value);
 		newval = newval.mod(this.group.getOrder());
+		return new GroupNumber(newval, this.group);
+	}
+	
+	public GroupNumber multiplyNoMod(GroupNumber n){
+		if(!this.group.getOrder().equals(n.group.getOrder())){
+			System.err.println("Operation being done on numbers from different groups!");
+		}
+		BigInteger newval = this.value.multiply(n.value);
 		return new GroupNumber(newval, this.group);
 	}
 	
