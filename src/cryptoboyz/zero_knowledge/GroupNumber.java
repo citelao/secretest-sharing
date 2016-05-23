@@ -35,7 +35,6 @@ public class GroupNumber {
 			System.err.println("Operation being done on numbers from different groups!");
 		}
 		BigInteger newval = this.value.add(n.value);
-		//newval = newval.mod(this.group.getOrder());
 		return new GroupNumber(newval, this.group);
 	}
 	
@@ -56,6 +55,14 @@ public class GroupNumber {
 		return new GroupNumber(newval, this.group);
 	}
 	
+	public GroupNumber xor(GroupNumber n){
+		if(!this.group.getOrder().equals(n.group.getOrder())){
+			System.err.println("Operation being done on numbers from different groups!");
+		}
+		BigInteger newval = this.value.xor(n.value);
+		return new GroupNumber(newval, this.group);
+	}
+	
 	public Group getGroup(){
 		return this.group;
 	}
@@ -63,15 +70,6 @@ public class GroupNumber {
 	public BigInteger getValue(){
 		return this.value;
 	}
-	
-//	public boolean equals(GroupNumber e){
-//		if(!this.group.getOrder().equals(e.group.getOrder())){
-//			System.err.println("Operation being done on numbers from different groups!");
-//		}
-//		return this.value.equals(e.value);
-//	}
-	
-	
 	
 	public void upConvertOrder(Group g) throws TrustException{
 		if(g.getOrder().compareTo(this.group.getOrder()) < 0){

@@ -46,7 +46,7 @@ public class Verifier {
 		}
 		
 		// Step 2: receive message of g^x h^x
-		GroupNumber message = p.getMessage(cm);
+		GroupNumber message = p.getMessage(cm)[0];
 		
 		// Step 3: send over proof of challenge bit
 		// Step 4: receive z
@@ -84,4 +84,72 @@ public class Verifier {
 		}
 		return ghz.equals(message.multiply(gxhxe));
 	}
+	
+	/**
+	 * this version is for simulation!
+	 * @param p
+	 * @param t number of bits to generate
+	 * @param fixedChallenge
+	 * @return GroupNumber[2]: [0] = simulated message (a), [1] = simulated response (z)
+	 */
+	public GroupNumber[] simVerify(Prover p, GroupNumber fixedChallenge) throws TrustException {
+		// Step 1: choose a choose bit & send it, encrypted-like
+		
+		//technically we dont need all this commitment business for the simulation
+		Group commitmentGroup = fixedChallenge.getGroup();
+
+		GroupNumber alpha = p.getAlpha(commitmentGroup);
+		GroupNumber key = commitmentGroup.generateMember();
+		GroupNumber generator = commitmentGroup.generateGenerator();
+		CommitMessage cm = CommitMessage.Generate(generator, alpha, key, fixedChallenge);
+		
+		if(DEBUG) {
+			System.out.println("\t\t(c = " + fixedChallenge + ")");
+			System.out.println("\tc = " + cm);
+		}
+		
+		// Step 2: receive message of g^x h^x
+		GroupNumber message = p.getMessage(cm)[0];
+		
+		// Step 3: send over proof of challenge bit
+		// Step 4: receive z
+		if(DEBUG) {
+			System.out.println("\t(challenge, key) = \n"
+					+ "\t\t challenge: " + fixedChallenge + "\n"
+					+ "\t\t key: " + key);
+		}
+		GroupNumber response = p.getResponse(fixedChallenge, key);
+		
+		// Step 5: confirm!
+		// (gh)^z ?= m*(g^x*h^x)^e?
+		// g, h given
+		// z = response
+		// m = message
+		// g^x = this.gx
+		// h^x = this.hx
+		// e = challenge
+		
+		//GroupNumber messageUpconverted = new GroupNumber(message.getValue(), ghz.getGroup());
+		response.upConvertOrder(g.getGroup());
+		fixedChallenge.upConvertOrder(g.getGroup());
+		
+		GroupNumber modMinusOne = new GroupNumber(g.getGroup().getOrder().subtract(BigInteger.ONE), g.getGroup());
+		
+		response = response.mod(modMinusOne);
+		
+		GroupNumber ghz = (this.g.multiply(this.h)).exp(response);
+		GroupNumber gxhxe = (this.gx.multiply(this.hx)).exp(fixedChallenge);
+		if(DEBUG) {
+			System.out.println("\t(gh)^z = " + ghz);
+			System.out.println("\t(g^x*h^x)^e = " + gxhxe);
+			System.out.println("\tm*(g^x*h^x)^e = " + message.multiply(gxhxe));
+			System.out.println("\t\tconvinced: " + ghz.equals(message.multiply(gxhxe)));
+		}
+		if(ghz.equals(message.multiply(gxhxe))){
+			return new GroupNumber[]{message, fixedChallenge, response};
+		}else{
+			throw new TrustException("Simulator should verify correctly!!!!");
+		}
+	}
+	
 }
