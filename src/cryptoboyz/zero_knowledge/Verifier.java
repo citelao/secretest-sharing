@@ -6,7 +6,7 @@ import java.math.BigInteger;
 import cryptoboyz.commitment.CommitMessage;
 import cryptoboyz.commitment.TrustException;
 
-public class Verifier {
+public class Verifier implements IVerifier {
 	
 	private static boolean DEBUG = false;
 	
@@ -46,7 +46,7 @@ public class Verifier {
 		}
 		
 		// Step 2: receive message of g^x h^x
-		GroupNumber message = p.getMessage(cm)[0];
+		GroupNumber message = p.getMessages(cm)[0];
 		
 		// Step 3: send over proof of challenge bit
 		// Step 4: receive z
@@ -55,7 +55,10 @@ public class Verifier {
 					+ "\t\t challenge: " + challenge + "\n"
 					+ "\t\t key: " + key);
 		}
-		GroupNumber response = p.getResponse(challenge, key);
+		GroupNumber[] responses = p.getResponses(challenge, key);
+		
+		// TODO check for all!
+		GroupNumber response = responses[0];
 		
 		// Step 5: confirm!
 		// (gh)^z ?= m*(g^x*h^x)^e?
@@ -109,7 +112,7 @@ public class Verifier {
 		}
 		
 		// Step 2: receive message of g^x h^x
-		GroupNumber message = p.getMessage(cm)[0];
+		GroupNumber message = p.getMessages(cm)[0];
 		
 		// Step 3: send over proof of challenge bit
 		// Step 4: receive z
@@ -118,7 +121,10 @@ public class Verifier {
 					+ "\t\t challenge: " + fixedChallenge + "\n"
 					+ "\t\t key: " + key);
 		}
-		GroupNumber response = p.getResponse(fixedChallenge, key);
+		GroupNumber[] responses = p.getResponses(fixedChallenge, key);
+		
+		// TODO confirm for all
+		GroupNumber response = responses[0];
 		
 		// Step 5: confirm!
 		// (gh)^z ?= m*(g^x*h^x)^e?

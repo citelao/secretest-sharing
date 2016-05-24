@@ -3,7 +3,7 @@ package cryptoboyz.zero_knowledge;
 import cryptoboyz.commitment.CommitMessage;
 import cryptoboyz.commitment.TrustException;
 
-public class Prover {
+public class Prover implements IProver {
 	
 	private static boolean DEBUG = false;
 	
@@ -35,7 +35,7 @@ public class Prover {
 		this.currStage = Stage.COMMIT;
 	}
 	
-	public GroupNumber getAlpha(Group t) throws TrustException{
+	public GroupNumber getAlpha(Group t) throws TrustException {
 		if(currStage != Stage.COMMIT){
 			throw new TrustException("Invalid stage");
 		}
@@ -52,33 +52,37 @@ public class Prover {
 		return alpha;
 	}
 	
-	public GroupNumber[] getMessage(CommitMessage cm) throws TrustException{
+	public GroupNumber[] getMessages(CommitMessage cm) throws TrustException{
 		if(currStage != Stage.MSG){
 			throw new TrustException("Invalid stage");
 		}
-		GroupNumber simulatorChallenge;
-		GroupNumber[] messages = new GroupNumber[2];
 		
-		if(orComposition){
-			simulatorChallenge = group.generateMember();
-			simulatorResult = runSimulation(simulatorChallenge);
-			messages[1] = simulatorResult.getMessage(); //a1
-		}
+		int size = (orComposition) ? 2 : 1;
+		GroupNumber[] messages = new GroupNumber[size];
 		
 		this.cm = cm;
 		currStage = currStage.next();
+		
 		this.r = group.generateMember();
-		messages[0] = (g.multiply(h)).exp(r); //m = (gh)^r
+		messages[0] = (g.multiply(h)).exp(r); // m = (gh)^r
+		
+		if(orComposition) {
+			GroupNumber simulatorChallenge = group.generateMember();
+			simulatorResult = runSimulation(simulatorChallenge);
+			messages[1] = simulatorResult.getMessage(); // a1
+		}
 		
 		if(DEBUG) {
 			System.out.println("(r = " + r + ")");
-			System.out.println("m = " + messages[0] + " = (gh)^r");
+			for(int i = 0; i < size; i++) {
+				System.out.println("m[" + i + "] = " + messages[i] + " = (gh)^r");
+			}
 		}
 		
 		return messages; //a0 and (optionally) a1
 	}
 	
-	public GroupNumber getResponse(GroupNumber challenge, GroupNumber key) throws TrustException{
+	public GroupNumber[] getResponses(GroupNumber challenge, GroupNumber key) throws TrustException{
 		
 		if(currStage != Stage.RESPONSE){
 			throw new TrustException("Invalid stage");
@@ -90,16 +94,25 @@ public class Prover {
 		} else {
 			cm.decommit(challenge, key);
 		}
+		
+		int size = (orComposition) ? 2 : 1;
+		GroupNumber[] zs = new GroupNumber[size]; 
 	
 		currStage = currStage.next();
 		challenge.upConvertOrder(group);
-		GroupNumber z = r.add(challenge.multiplyNoMod(w)); //z = r + ew
+		zs[0] = r.add(challenge.multiplyNoMod(w)); //z = r + ew
 		
-		if(DEBUG) {
-			System.out.println("z = " + z + " = r + challenge * x");
+		if(orComposition) {
+			zs[1] = simulatorResult.getResponse();
 		}
 		
-		return z;
+		if(DEBUG) {
+			for(int i = 0; i < size; i++) {
+				System.out.println("z[" + i + "] = " + zs[i] + " = r + challenge * x");
+			}
+		}
+		
+		return zs;
 	}
 	
 	private ResponsePackage runSimulation(GroupNumber simulatorChallenge) throws TrustException{
