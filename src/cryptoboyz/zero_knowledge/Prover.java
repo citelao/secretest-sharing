@@ -19,7 +19,7 @@ public class Prover {
 	private Stage currStage;
 	private CommitMessage cm;
 	private boolean orComposition;
-	private GroupNumber[] simulatorResult;
+	private ResponsePackage simulatorResult;
 	
 	public Prover(GroupNumber g, GroupNumber h, GroupNumber x, Group group, boolean orComposition) {
 		this.g = g;
@@ -29,8 +29,7 @@ public class Prover {
 		if(orComposition){
 			this.gprime = group.generateMember();
 			this.hprime = group.generateMember();
-			this.simulatorResult = new GroupNumber[3]; //simulatorResult will hold a1, e1, and z1
-		}											   //all in response to the statement the prover cannot prove
+		}
 		
 		this.group = group;
 		this.currStage = Stage.COMMIT;
@@ -63,7 +62,7 @@ public class Prover {
 		if(orComposition){
 			simulatorChallenge = group.generateMember();
 			simulatorResult = runSimulation(simulatorChallenge);
-			messages[1] = simulatorResult[0]; //a1
+			messages[1] = simulatorResult.getMessage(); //a1
 		}
 		
 		this.cm = cm;
@@ -76,7 +75,7 @@ public class Prover {
 			System.out.println("m = " + messages[0] + " = (gh)^r");
 		}
 		
-		return messages; //a0 and a1
+		return messages; //a0 and (optionally) a1
 	}
 	
 	public GroupNumber getResponse(GroupNumber challenge, GroupNumber key) throws TrustException{
@@ -103,8 +102,9 @@ public class Prover {
 		return z;
 	}
 	
-	private GroupNumber[] runSimulation(GroupNumber simulatorChallenge) throws TrustException{
+	private ResponsePackage runSimulation(GroupNumber simulatorChallenge) throws TrustException{
 		Prover simProver = new Prover(this.gprime, this.hprime, this.w, this.group, false);
+		
 		Verifier simVerifier = new Verifier(this.gprime, this.hprime, this.gprime.exp(this.w), this.hprime.exp(this.w));
 		
 		return simVerifier.simVerify(simProver, simulatorChallenge);

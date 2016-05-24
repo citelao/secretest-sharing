@@ -6,7 +6,7 @@ public class OrSchnorr {
 	private static boolean DEBUG = false;
 
 	public static void main(String[] args) {
-		for (int i = 0; i < 4815; ++i) {
+		for (int i = 0; i < 30; ++i) {
 			Group group = new Group();
 			GroupNumber g = group.generateMember();
 			GroupNumber h = group.generateMember();

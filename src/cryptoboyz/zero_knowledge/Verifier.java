@@ -92,7 +92,7 @@ public class Verifier {
 	 * @param fixedChallenge
 	 * @return GroupNumber[2]: [0] = simulated message (a), [1] = simulated response (z)
 	 */
-	public GroupNumber[] simVerify(Prover p, GroupNumber fixedChallenge) throws TrustException {
+	public ResponsePackage simVerify(Prover p, GroupNumber fixedChallenge) throws TrustException {
 		// Step 1: choose a choose bit & send it, encrypted-like
 		
 		//technically we dont need all this commitment business for the simulation
@@ -146,7 +146,7 @@ public class Verifier {
 			System.out.println("\t\tconvinced: " + ghz.equals(message.multiply(gxhxe)));
 		}
 		if(ghz.equals(message.multiply(gxhxe))){
-			return new GroupNumber[]{message, fixedChallenge, response};
+			return new ResponsePackage(message, fixedChallenge, response);
 		}else{
 			throw new TrustException("Simulator should verify correctly!!!!");
 		}
