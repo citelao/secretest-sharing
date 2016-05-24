@@ -13,7 +13,13 @@ public class OrSchnorr {
 			while (h.equals(g)) {
 				h = group.generateMember();
 			}
-
+			
+			GroupNumber gprime = group.generateMember();
+			GroupNumber hprime = group.generateMember();
+			while (hprime.equals(gprime)) {
+				hprime = group.generateMember();
+			}
+			
 			GroupNumber x = group.generateNonTrivialMember();
 
 			if (DEBUG) {
@@ -28,8 +34,8 @@ public class OrSchnorr {
 			}
 
 			try {
-				Prover p = new Prover(g, h, x, group, true); //proving two statements
-				Verifier v = new Verifier(g, h, g.exp(x), h.exp(x));
+				Prover p = new Prover(g, h, x, gprime, hprime, group); //proving two statements
+				Verifier v = new Verifier(g, h, g.exp(x), h.exp(x), gprime, hprime);
 				if (!v.verify(p, 40)) {
 					System.err.println("Failed to verify!!!!!!!!!!");
 					return;

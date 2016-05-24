@@ -7,6 +7,6 @@ public interface IProver {
 
 	GroupNumber getAlpha(Group g) throws TrustException;
 	GroupNumber[] getMessages(CommitMessage challengeCommitment) throws TrustException;
-	GroupNumber[] getResponses(GroupNumber challenge, GroupNumber key) throws TrustException;
+	VerifyPackage[] getResponses(GroupNumber challenge, GroupNumber key) throws TrustException;
 	
 }

@@ -14,12 +14,24 @@ public class Verifier implements IVerifier {
 	private GroupNumber h;
 	private GroupNumber gx;
 	private GroupNumber hx;
+	private GroupNumber gprime;
+	private GroupNumber hprime;
 
 	public Verifier(GroupNumber g, GroupNumber h, GroupNumber gx, GroupNumber hx) {
 		this.g = g;
 		this.h = h;
 		this.gx = gx;
 		this.hx = hx;
+	}
+	
+	public Verifier(GroupNumber g, GroupNumber h, GroupNumber gx, GroupNumber hx,
+					GroupNumber gprime, GroupNumber hprime) {
+		this.g = g;
+		this.h = h;
+		this.gx = gx;
+		this.hx = hx;
+		this.gprime = gprime;
+		this.hprime = hprime;
 	}
 
 	/**
@@ -55,10 +67,10 @@ public class Verifier implements IVerifier {
 					+ "\t\t challenge: " + challenge + "\n"
 					+ "\t\t key: " + key);
 		}
-		GroupNumber[] responses = p.getResponses(challenge, key);
+		VerifyPackage[] responses = p.getResponses(challenge, key);
 		
 		// TODO check for all!
-		GroupNumber response = responses[0];
+		GroupNumber response = responses[0].getResponse();
 		
 		// Step 5: confirm!
 		// (gh)^z ?= m*(g^x*h^x)^e?
@@ -85,6 +97,23 @@ public class Verifier implements IVerifier {
 			System.out.println("\tm*(g^x*h^x)^e = " + message.multiply(gxhxe));
 			System.out.println("\t\tconvinced: " + ghz.equals(message.multiply(gxhxe)));
 		}
+		
+		if(responses.length > 1){
+			//check that received challenges xor to original challenge
+			GroupNumber e0 = responses[0].getChallenge();
+			GroupNumber e1 = responses[1].getChallenge();
+			if(!e0.xor(e1).equals(challenge)){
+				return false;
+			}
+			//check that received responses raise to their corresponding messages
+			
+			//ghz' = (g'h')^z1
+			// this should = a1 * ??? having a senior moment here
+			GroupNumber ghzprime = (this.gprime.multiply(this.hprime)).exp(responses[1].getResponse());
+			
+			//return (ghz.equals(message.multiply(gxhxe)) && 
+		}
+		
 		return ghz.equals(message.multiply(gxhxe));
 	}
 	
@@ -121,10 +150,10 @@ public class Verifier implements IVerifier {
 					+ "\t\t challenge: " + fixedChallenge + "\n"
 					+ "\t\t key: " + key);
 		}
-		GroupNumber[] responses = p.getResponses(fixedChallenge, key);
+		VerifyPackage[] responses = p.getResponses(fixedChallenge, key);
 		
 		// TODO confirm for all
-		GroupNumber response = responses[0];
+		GroupNumber response = responses[0].getResponse();
 		
 		// Step 5: confirm!
 		// (gh)^z ?= m*(g^x*h^x)^e?
@@ -151,6 +180,7 @@ public class Verifier implements IVerifier {
 			System.out.println("\tm*(g^x*h^x)^e = " + message.multiply(gxhxe));
 			System.out.println("\t\tconvinced: " + ghz.equals(message.multiply(gxhxe)));
 		}
+		
 		if(ghz.equals(message.multiply(gxhxe))){
 			return new ResponsePackage(message, fixedChallenge, response);
 		}else{

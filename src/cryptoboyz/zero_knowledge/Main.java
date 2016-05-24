@@ -29,7 +29,7 @@ public class Main {
 			}
 
 			try {
-				Prover p = new Prover(g, h, x, group, false);
+				Prover p = new Prover(g, h, x, group);
 				Verifier v = new Verifier(g, h, g.exp(x), h.exp(x));
 				if (!v.verify(p, 40)) {
 					System.err.println("Failed to verify!!!!!!!!!!");
