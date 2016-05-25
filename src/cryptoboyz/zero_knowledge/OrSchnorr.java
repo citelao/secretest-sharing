@@ -3,7 +3,7 @@ package cryptoboyz.zero_knowledge;
 import cryptoboyz.commitment.TrustException;
 
 public class OrSchnorr {
-	private static boolean DEBUG = false;
+	private static boolean DEBUG = true;
 
 	public static void main(String[] args) {
 		for (int i = 0; i < 30; ++i) {
@@ -19,6 +19,8 @@ public class OrSchnorr {
 			while (hprime.equals(gprime)) {
 				hprime = group.generateMember();
 			}
+			GroupNumber gprimex = gprime.exp(group.generateMember());
+			GroupNumber hprimex = hprime.exp(group.generateMember());
 			
 			GroupNumber x = group.generateNonTrivialMember();
 
@@ -34,10 +36,9 @@ public class OrSchnorr {
 			}
 
 			try {
-				Prover p = new Prover(g, h, x, gprime, hprime, group); //proving two statements
-				Verifier v = new Verifier(g, h, g.exp(x), h.exp(x), gprime, hprime, 
-						gprime.exp(group.generateMember()), hprime.exp(group.generateMember()));
-				if (!v.verify(p, 40)) {
+				Prover p = new Prover(g, h, x, gprime, hprime, gprimex, hprimex, group); //proving two statements
+				Verifier v = new Verifier(g, h, g.exp(x), h.exp(x), gprime, hprime, gprimex, hprimex);
+				if (!v.verify(p, 4)) {
 					System.err.println("Failed to verify!!!!!!!!!!");
 					return;
 				}
@@ -46,7 +47,7 @@ public class OrSchnorr {
 				e.printStackTrace();
 			}
 
-			//System.out.println("" + i + ": successful.");
+			System.out.println("" + i + ": successful.");
 		}
 
 		System.out.println("Done, no errors.");

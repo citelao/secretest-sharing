@@ -1,63 +1,26 @@
 package cryptoboyz.zero_knowledge;
 
-
 import java.math.BigInteger;
 
 import cryptoboyz.commitment.CommitMessage;
 import cryptoboyz.commitment.TrustException;
 
-public class Verifier implements IVerifier {
-	
-	private static boolean DEBUG = true;
-	
-	private GroupNumber[] gs;
-	private GroupNumber[] hs;
-	private GroupNumber[] gxs;
-	private GroupNumber[] hxs;
-	
-	public Verifier(GroupNumber g, GroupNumber h, GroupNumber gx, GroupNumber hx) {
-		this.gs = new GroupNumber[1];
-		this.gs[0] = g;
-		this.hs = new GroupNumber[1];
-		this.hs[0] = h;
-		
-		this.gxs = new GroupNumber[1];
-		this.gxs[0] = gx;
-		this.hxs = new GroupNumber[1];
-		this.hxs[0] = hx;
-	}
-	
-	public Verifier(GroupNumber g, GroupNumber h, GroupNumber gx, GroupNumber hx,
-					GroupNumber gprime, GroupNumber hprime,
-					GroupNumber gprimex, GroupNumber hprimex) {
-		this.gs = new GroupNumber[2];
-		this.gs[0] = g;
-		this.gs[1] = gprime;
-		this.hs = new GroupNumber[2];
-		this.hs[0] = h;
-		this.hs[1] = hprime;
-		
-		this.gxs = new GroupNumber[2];
-		this.gxs[0] = gx;
-		this.gxs[1] = gprimex;
-		this.hxs = new GroupNumber[2];
-		this.hxs[0] = hx;
-		this.hxs[1] = hprimex;
+public class Simulator {
+
+	private static final boolean DEBUG = false;
+
+
+	public Simulator(GroupNumber gprime, GroupNumber hprime, 
+			GroupNumber gprimex, GroupNumber hprimex) {
+		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * 
-	 * @param p
-	 * @param t number of bits to generate
-	 * @return
-	 * @throws TrustException
-	 */
-	public boolean verify(Prover p, int t) throws TrustException {
-		// Step 1: choose a choose bit & send it, encrypted-like
-		Group commitmentGroup = new Group(t);
+
+	public ResponsePackage simulate(IProver prover, GroupNumber challenge) {
+		// Step 1: use the precommited challenge bit.
+		Group commitmentGroup = challenge.getGroup();
 	
-		GroupNumber alpha = p.getAlpha(commitmentGroup);
-		GroupNumber challenge = commitmentGroup.generateMember();
+		GroupNumber alpha = prover.getAlpha(commitmentGroup);
 		GroupNumber key = commitmentGroup.generateMember();
 		GroupNumber generator = commitmentGroup.generateGenerator();
 		CommitMessage cm = CommitMessage.Generate(generator, alpha, key, challenge);
@@ -68,7 +31,7 @@ public class Verifier implements IVerifier {
 		}
 		
 		// Step 2: receive message of g^r h^r
-		GroupNumber[] messages = p.getMessages(cm);
+		GroupNumber[] messages = prover.getMessages(cm);
 		
 		// Step 3: send over proof of challenge bit
 		// Step 4: receive z
@@ -78,7 +41,7 @@ public class Verifier implements IVerifier {
 					+ "\t\t key: " + key);
 		}
 		//these are the z's
-		VerifyPackage[] responses = p.getResponses(challenge, key);
+		VerifyPackage[] responses = prover.getResponses(challenge, key);
 		
 		// Step 5: confirm!
 		// (gh)^z ?= m*(g^x*h^x)^e?
@@ -133,4 +96,5 @@ public class Verifier implements IVerifier {
 		
 		return true;
 	}
+
 }
