@@ -72,21 +72,21 @@ public class Prover implements IProver {
 		currStage = currStage.next();
 
 		this.r = group.generateMember();
+		
 		messages[0] = (g.multiply(h)).exp(r); // m = (gh)^r
-
+		
 		if(orComposition) {
 			GroupNumber simulatorChallenge = group.generateMember();
 			simulatorResult = runSimulation(simulatorChallenge);
 			messages[1] = simulatorResult.getMessage(); // a1
 		}
-
+		
 		if(DEBUG) {
 			System.out.println("(r = " + r + ")");
 			for(int i = 0; i < size; i++) {
 				System.out.println("m[" + i + "] = " + messages[i] + " = (gh)^r");
 			}
 		}
-
 		return messages; //a0 and (optionally) a1
 	}
 
@@ -102,20 +102,19 @@ public class Prover implements IProver {
 		} else {
 			cm.decommit(challenge, key);
 		}
-
+		challenge.upConvertOrder(group);
 		int size = (orComposition) ? 2 : 1;
 		VerifyPackage[] vp = new VerifyPackage[size]; 
-
+		
 		if(orComposition) {
 			challenge = simulatorResult.getChallenge().xor(challenge);
 			VerifyPackage v1 = new VerifyPackage(simulatorResult.getResponse(), simulatorResult.getChallenge());
 			vp[1] = v1;
 		}
-
 		currStage = currStage.next();
-		challenge.upConvertOrder(group);
+		
 		vp[0] = new VerifyPackage(r.add(challenge.multiplyNoMod(w)), challenge);; //z = r + ew
-
+		
 		if(DEBUG) {
 			for(int i = 0; i < size; i++) {
 				System.out.println("z[" + i + "] = " + vp[i] + " = r + challenge * x");
@@ -127,9 +126,7 @@ public class Prover implements IProver {
 
 	private ResponsePackage runSimulation(GroupNumber simulatorChallenge) throws TrustException{
 		Prover simProver = new Prover(this.gprime, this.hprime, this.w, this.group);
-
 		Verifier simVerifier = new Verifier(this.gprime, this.hprime, this.gprime.exp(this.w), this.hprime.exp(this.w));
-
 		return simVerifier.simVerify(simProver, simulatorChallenge);
 	}
 }

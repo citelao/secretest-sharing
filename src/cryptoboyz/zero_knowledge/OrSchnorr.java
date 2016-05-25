@@ -35,7 +35,8 @@ public class OrSchnorr {
 
 			try {
 				Prover p = new Prover(g, h, x, gprime, hprime, group); //proving two statements
-				Verifier v = new Verifier(g, h, g.exp(x), h.exp(x), gprime, hprime);
+				Verifier v = new Verifier(g, h, g.exp(x), h.exp(x), gprime, hprime, 
+						gprime.exp(group.generateMember()), hprime.exp(group.generateMember()));
 				if (!v.verify(p, 40)) {
 					System.err.println("Failed to verify!!!!!!!!!!");
 					return;
