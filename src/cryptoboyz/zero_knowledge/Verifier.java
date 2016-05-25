@@ -52,7 +52,6 @@ public class Verifier implements IVerifier {
 	
 		GroupNumber alpha = p.getAlpha(commitmentGroup);
 		GroupNumber challenge = commitmentGroup.generateMember();
-		challenge = new GroupNumber(BigInteger.ONE, commitmentGroup);
 		GroupNumber key = commitmentGroup.generateMember();
 		GroupNumber generator = commitmentGroup.generateGenerator();
 		CommitMessage cm = CommitMessage.Generate(generator, alpha, key, challenge);
