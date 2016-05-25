@@ -8,7 +8,7 @@ import cryptoboyz.commitment.TrustException;
 
 public class Verifier implements IVerifier {
 	
-	private static boolean DEBUG = true;
+	private static boolean DEBUG = false;
 	
 	private GroupNumber[] gs;
 	private GroupNumber[] hs;
@@ -94,6 +94,7 @@ public class Verifier implements IVerifier {
 		for(int i = 0; i < responses.length; i++) {
 			VerifyPackage pack = responses[i];
 			GroupNumber message = messages[i];
+			GroupNumber subChallenge = pack.getChallenge();
 			GroupNumber g = this.gs[i];
 			GroupNumber gx = this.gxs[i];
 			GroupNumber h = this.hs[i];
@@ -108,9 +109,14 @@ public class Verifier implements IVerifier {
 			response = response.mod(modMinusOne);
 			
 			GroupNumber ghz = (g.multiply(h)).exp(response);
-			GroupNumber gxhxe = (gx.multiply(hx)).exp(challenge);
+			GroupNumber gxhxe = (gx.multiply(hx)).exp(subChallenge);
 			
 			if(DEBUG) {
+				System.out.println("\tg = " + g);
+				System.out.println("\th = " + h);
+				System.out.println("\tgx = " + gx);
+				System.out.println("\thx = " + hx);
+				System.out.println("\te = " + subChallenge);
 				System.out.println("\t(gh)^z = " + ghz);
 				System.out.println("\t(g^x*h^x)^e = " + gxhxe);
 				System.out.println("\tm*(g^x*h^x)^e = " + message.multiply(gxhxe));

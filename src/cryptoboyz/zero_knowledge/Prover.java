@@ -5,7 +5,7 @@ import cryptoboyz.commitment.TrustException;
 
 public class Prover implements IProver {
 
-	private static boolean DEBUG = true;
+	private static boolean DEBUG = false;
 
 	/**
 	 * k = random groupnumber for commitment scheme (based off order of commitment group, t)
@@ -111,13 +111,13 @@ public class Prover implements IProver {
 		
 		challenge.upConvertOrder(group);
 		
-		vp[0] = new VerifyPackage(r.add(challenge.multiplyNoMod(w)), challenge); //z = r + ew
-		
 		if(orComposition) {
 			challenge = simulatorResult.getChallenge().xor(challenge);
 			VerifyPackage v1 = new VerifyPackage(simulatorResult.getResponse(), simulatorResult.getChallenge());
 			vp[1] = v1;
 		}
+		
+		vp[0] = new VerifyPackage(r.add(challenge.multiplyNoMod(w)), challenge); //z = r + ew
 		
 		if(DEBUG) {
 			for(int i = 0; i < size; i++) {
@@ -129,12 +129,15 @@ public class Prover implements IProver {
 	}
 
 	private ResponsePackage runSimulation(GroupNumber simulatorChallenge) throws TrustException{
-		System.out.println("Simulating!");
-		IProver simProver = new SimulatedProver(this.gprime, this.hprime, this.gprimex, this.hprimex, this.group);
+		if(DEBUG) {
+			System.out.println("Simulating!");
+		}
 		Simulator simulator = new Simulator(this.gprime, this.hprime, 
-				this.gprimex, this.hprimex);
-		ResponsePackage result = simulator.simulate(simProver, simulatorChallenge);
-		System.out.println("End simulate!");
+				this.gprimex, this.hprimex, this.group);
+		ResponsePackage result = simulator.simulate(simulatorChallenge);
+		if(DEBUG) {
+			System.out.println("End simulate!");
+		}
 		return result;
 	}
 }

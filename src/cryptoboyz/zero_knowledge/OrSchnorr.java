@@ -3,10 +3,10 @@ package cryptoboyz.zero_knowledge;
 import cryptoboyz.commitment.TrustException;
 
 public class OrSchnorr {
-	private static boolean DEBUG = true;
+	private static boolean DEBUG = false;
 
 	public static void main(String[] args) {
-		for (int i = 0; i < 30; ++i) {
+		for (int i = 0; i < 300; ++i) {
 			Group group = new Group();
 			GroupNumber g = group.generateMember();
 			GroupNumber h = group.generateMember();
@@ -19,10 +19,11 @@ public class OrSchnorr {
 			while (hprime.equals(gprime)) {
 				hprime = group.generateMember();
 			}
-			GroupNumber gprimex = gprime.exp(group.generateMember());
-			GroupNumber hprimex = hprime.exp(group.generateMember());
 			
 			GroupNumber x = group.generateNonTrivialMember();
+			GroupNumber xprime = group.generateNonTrivialMember();
+			GroupNumber gprimex = gprime.exp(xprime);
+			GroupNumber hprimex = hprime.exp(xprime);
 
 			if (DEBUG) {
 				System.out.println("The problem:");
@@ -30,6 +31,10 @@ public class OrSchnorr {
 				System.out.println("h: " + h + "\t(h^x: " + h.exp(x) + ")");
 				System.out.println("\t(x: " + x + ")");
 				System.out.println("\t(gh^x: " + g.multiply(h).exp(x) + ")");
+				System.out.println("g': " + gprime + "\t(g'^x': " + gprime.exp(xprime) + ")");
+				System.out.println("h': " + hprime + "\t(h'^x': " + hprime.exp(xprime) + ")");
+				System.out.println("\t(x': " + xprime + ")");
+				System.out.println("\t(gh^x: " + gprime.multiply(hprime).exp(xprime) + ")");
 				System.out.println("|group|: " + group.getOrder() + "");
 
 				System.out.println("\nThe protocol:");
@@ -38,7 +43,7 @@ public class OrSchnorr {
 			try {
 				Prover p = new Prover(g, h, x, gprime, hprime, gprimex, hprimex, group); //proving two statements
 				Verifier v = new Verifier(g, h, g.exp(x), h.exp(x), gprime, hprime, gprimex, hprimex);
-				if (!v.verify(p, 4)) {
+				if (!v.verify(p, 40)) {
 					System.err.println("Failed to verify!!!!!!!!!!");
 					return;
 				}

@@ -2,99 +2,50 @@ package cryptoboyz.zero_knowledge;
 
 import java.math.BigInteger;
 
-import cryptoboyz.commitment.CommitMessage;
-import cryptoboyz.commitment.TrustException;
-
 public class Simulator {
 
 	private static final boolean DEBUG = false;
+	private GroupNumber g;
+	private GroupNumber h;
+	private GroupNumber gx;
+	private GroupNumber hx;
+	private Group group;
 
 
-	public Simulator(GroupNumber gprime, GroupNumber hprime, 
-			GroupNumber gprimex, GroupNumber hprimex) {
-		// TODO Auto-generated constructor stub
+	public Simulator(GroupNumber g, GroupNumber h, 
+			GroupNumber gx, GroupNumber hx,
+			Group group) {
+		this.g = g;
+		this.h = h;
+		this.gx = gx;
+		this.hx = hx;
+		this.group = group;
 	}
 
-
-	public ResponsePackage simulate(IProver prover, GroupNumber challenge) {
-		// Step 1: use the precommited challenge bit.
-		Group commitmentGroup = challenge.getGroup();
-	
-		GroupNumber alpha = prover.getAlpha(commitmentGroup);
-		GroupNumber key = commitmentGroup.generateMember();
-		GroupNumber generator = commitmentGroup.generateGenerator();
-		CommitMessage cm = CommitMessage.Generate(generator, alpha, key, challenge);
+	public ResponsePackage simulate(GroupNumber challenge) {
+		// We need to generate a message, challenge, and response.
+		
+		// (gh)^z = (gh)^r(g^x*h^x)^e
+		
+		// We have our challenge e => (g^x*h^x)^e
+		GroupNumber gxhxe = gx.multiply(hx).exp(challenge); 
+		// Generate a random z => (gh)^z
+		GroupNumber modMinusOne = new GroupNumber(this.group.getOrder().subtract(BigInteger.ONE), this.group);
+		GroupNumber z = this.group.generateNonTrivialMember().mod(modMinusOne);
+		GroupNumber ghz = g.multiply(h).exp(z);
+		// (gh)^z / (g^x*h^x)^e = (gh)^r = m
+		GroupNumber m = ghz.multiply(gxhxe.inverse());
 		
 		if(DEBUG) {
-			System.out.println("\t\t(c = " + challenge + ")");
-			System.out.println("\tc = " + cm);
+			System.out.println("|group|: " + this.group.getOrder());
+			System.out.println("challenge: " + challenge);
+			System.out.println("gxhxe: " + gxhxe);
+			System.out.println("z: " + z);
+			System.out.println("ghz: " + ghz);
+			System.out.println("m: " + m);
 		}
 		
-		// Step 2: receive message of g^r h^r
-		GroupNumber[] messages = prover.getMessages(cm);
-		
-		// Step 3: send over proof of challenge bit
-		// Step 4: receive z
-		if(DEBUG) {
-			System.out.println("\t(challenge, key) = \n"
-					+ "\t\t challenge: " + challenge + "\n"
-					+ "\t\t key: " + key);
-		}
-		//these are the z's
-		VerifyPackage[] responses = prover.getResponses(challenge, key);
-		
-		// Step 5: confirm!
-		// (gh)^z ?= m*(g^x*h^x)^e?
-		// g, h given
-		// z = response
-		// m = message
-		// g^x = this.gx
-		// h^x = this.hx
-		// e = challenge
-		if(responses.length != messages.length) {
-			throw new TrustException("Not enough messages or responses");
-		}
-		for(int i = 0; i < responses.length; i++) {
-			VerifyPackage pack = responses[i];
-			GroupNumber message = messages[i];
-			GroupNumber g = this.gs[i];
-			GroupNumber gx = this.gxs[i];
-			GroupNumber h = this.hs[i];
-			GroupNumber hx = this.hxs[i];
-			
-			GroupNumber response = pack.getResponse();
-			
-			response.upConvertOrder(g.getGroup());
-			challenge.upConvertOrder(g.getGroup());
-			
-			GroupNumber modMinusOne = new GroupNumber(g.getGroup().getOrder().subtract(BigInteger.ONE), g.getGroup());
-			response = response.mod(modMinusOne);
-			
-			GroupNumber ghz = (g.multiply(h)).exp(response);
-			GroupNumber gxhxe = (gx.multiply(hx)).exp(challenge);
-			
-			if(DEBUG) {
-				System.out.println("\t(gh)^z = " + ghz);
-				System.out.println("\t(g^x*h^x)^e = " + gxhxe);
-				System.out.println("\tm*(g^x*h^x)^e = " + message.multiply(gxhxe));
-				System.out.println("\t\tconvinced: " + ghz.equals(message.multiply(gxhxe)));
-			}
-			
-			if(!ghz.equals(message.multiply(gxhxe))) {
-				return false;
-			}
-		}
-		
-		// check that received challenges xor to original challenge
-		if(responses.length > 1){
-			GroupNumber e0 = responses[0].getChallenge();
-			GroupNumber e1 = responses[1].getChallenge();
-			if(!(e0.xor(e1)).equals(challenge)){
-				return false;
-			}
-		}
-		
-		return true;
+		return new ResponsePackage(m, challenge, z);
 	}
 
 }
